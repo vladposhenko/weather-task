@@ -1,12 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { BackHandler, StyleSheet } from 'react-native';
+import Navigation from './Navigation';
+import { useEffect } from 'react';
+import * as Location from 'expo-location';
 
-export default function App() {
+const App = () => {
+
+  useEffect(() => {
+    (async () => {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          BackHandler.exitApp();
+        }
+      } catch (err) {
+          console.error(err);
+      }
+    })(); 
+  }, [])
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Navigation />
   );
 }
 
@@ -18,3 +31,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default App
